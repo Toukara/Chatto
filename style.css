@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700&display=swap");
+
+html,
+body {
+  font-family: "Noto Sans", sans-serif;
+}
+
+#chat-container {
+  position: absolute;
+  padding: 16px;
+  bottom: 0;
+  overflow: hidden;
+  background-color: transparent;
+  font-size: 20px;
+  font-weight: 800;
+  width: calc(100% - 20px);
+}
+
+#chat-container::-webkit-scrollbar {
+  display: none;
+}
+
+.message {
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: white;
+  width: 650px;
+}
+
+.username {
+  font-weight: 700;
+}
+
+.user-badges > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.message:last-child {
+  animation: slide-in 0.5s ease-in-out;
+}
