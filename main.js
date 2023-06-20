@@ -1,11 +1,14 @@
-const channelName = "toukara";
+const urlParams = new URLSearchParams(window.location.search);
+const channelName = urlParams.get("channel");
+
+console;
+// const channelName = "toukara";
 
 const deleteMessageTimer = 300000; // 5 minutes per default
 
 const baseUrl = "wss://ws-us2.pusher.com/app/eb1d5f283081a78b932c";
-const urlParams = new URLSearchParams({ protocol: "7", client: "js", version: "7.4.0", flash: "false" });
 
-const url = `${baseUrl}?${urlParams.toString()}`;
+const url = `${baseUrl}?protocol=7&client=js&version=7.4.0&flash=false`;
 
 let subBadges;
 
@@ -242,7 +245,5 @@ async function main() {
     }
   };
 }
-
-
 
 main();
