@@ -1,155 +1,15 @@
-const channelName = "iceposeidon";
+const channelName = "toukara";
 
 const deleteMessageTimer = 300000; // 5 minutes per default
 
 const baseUrl = "wss://ws-us2.pusher.com/app/eb1d5f283081a78b932c";
-const urlParams = new URLSearchParams({
-  protocol: "7",
-  client: "js",
-  version: "7.4.0",
-  flash: "false",
-});
+const urlParams = new URLSearchParams({ protocol: "7", client: "js", version: "7.4.0", flash: "false" });
 
 const url = `${baseUrl}?${urlParams.toString()}`;
 
-function connection(chatroomID) {
-  const chat = new WebSocket(url);
-  console.log("Connecting to chat...");
-  console.log(chat);
+let subBadges;
 
-  chat.onerror = (error) => {
-    console.log("Error: " + error);
-  };
-
-  chat.onopen = () => {
-    console.log("Connected to Pusher");
-    document.getElementById("loading").innerHTML = "Connected";
-    // 2 seconds after connecting, remove the loading screen
-    setTimeout(() => {
-      document.getElementById("loading").style.display = "none";
-    }, 1000);
-    chat.send(
-      JSON.stringify({
-        event: "pusher:subscribe",
-        data: {
-          auth: "",
-          channel: `chatrooms.${chatroomID}.v2`,
-        },
-      })
-    );
-    chat.send(
-      JSON.stringify({
-        event: "pusher:subscribe",
-        data: {
-          auth: "",
-          channel: `channel.${chatroomID + 2}`,
-        },
-      })
-    );
-  };
-
-  chat.onmessage = (event) => {
-    parseMessage(event.data);
-  };
-
-  setInterval(() => {
-    chat.send(
-      JSON.stringify({
-        event: "pusher:ping",
-        data: {},
-      })
-    );
-  }, 60000);
-}
-
-async function parseMessage(message) {
-  const parsedMessage = JSON.parse(message);
-  const data = JSON.parse(
-    parsedMessage.data
-      .replace(/\\u00a0/g, " ")
-      .replace(/\\n/g, " ")
-      .replace(/\\t/g, " ")
-      .replace(/\\r/g, " ")
-      .replace(/\\f/g, " ")
-      .replace(/\\b/g, " ")
-      .replace(/\\v/g, " ")
-      .replace(/\\\\/g, "\\")
-  );
-
-  if (!data) return;
-  // console.log(data);
-  const user = {
-    username: data.sender.username,
-    id: data.sender.id,
-    color: data.sender.identity.color,
-    slug: data.sender.slug,
-    badges: data.sender.identity.badges,
-  };
-
-  let msgContent = data.content;
-
-  let emoteRegex = /\[emote:(\d+):?([\w\s\-~!@#$%^&*()_+=\{}\\|;:'",.<>\/?]+)\]/g;
-  let emoteMatches = msgContent.match(emoteRegex);
-  if (emoteMatches) {
-    for (let i = 0; i < emoteMatches.length; i++) {
-      let emoteMatch = emoteMatches[i];
-      let emoteId = emoteMatch.match(/\[emote:(\d+):?([\w\s\-~!@#$%^&*()_+=\{}\\|;:'",.<>\/?]+)\]/)[1];
-
-      msgContent = msgContent.replace(emoteMatch, `<img src="https://d2egosedh0nm8l.cloudfront.net/emotes/${emoteId}/fullsize" class="emote">`);
-    }
-  }
-
-  let kickEmojiRegex = /\[emoji:(\w+)\]/g;
-  let kickEmojiMatches = msgContent.match(kickEmojiRegex);
-  if (kickEmojiMatches) {
-    for (let i = 0; i < kickEmojiMatches.length; i++) {
-      let kickEmojiMatch = kickEmojiMatches[i];
-      let kickEmojiName = kickEmojiMatch.match(/\[emoji:(\w+)\]/)[1];
-
-      msgContent = msgContent.replace(
-        kickEmojiMatch,
-        `<img src="https://dbxmjjzl5pc1g.cloudfront.net/9ad84c86-99f0-4f0a-8e1a-baccf20502b9/images/emojis/${kickEmojiName}.png" class="emote">`
-      );
-    }
-  }
-
-  // console.log(user.badges);
-
-  const messageElement = document.createElement("div");
-  const userBadges = document.createElement("span");
-  const username = document.createElement("span");
-  const messageContent = document.createElement("span");
-
-  messageElement.classList.add("message");
-  userBadges.classList.add("user-badges");
-  username.classList.add("username");
-  username.style.color = user.color;
-  messageContent.classList.add("message-content");
-
-  username.innerText = user.username;
-  messageContent.innerText = ` : ${data.content}`;
-
-  if (user.badges.length > 0) {
-    userBadges.innerHTML = await getBadges(user.badges);
-    console.log(userBadges);
-  } else {
-    userBadges.innerHTML = "";
-  }
-
-  username.prepend(userBadges);
-  messageElement.appendChild(username);
-  messageElement.appendChild(messageContent);
-
-  document.getElementById("chat-container").appendChild(messageElement);
-
-  setTimeout(() => {
-    console.log("Removing message");
-    console.log(messageElement);
-    messageElement.remove();
-  }, deleteMessageTimer);
-}
-
-async function fetchData(url) {
+async function fetchMsg(url) {
   let response;
   while (!response || !response.ok) {
     try {
@@ -166,28 +26,123 @@ async function fetchData(url) {
   return response;
 }
 
-let subsBadges;
-
-async function fetchChannelID(channelName) {
-  const response = await fetchData(`https://kick.com/api/v2/channels/${channelName}`);
+async function getChannelInfo() {
+  const response = await fetchMsg(`https://kick.com/api/v2/channels/${channelName}`);
   const data = await response.json();
 
-  console.log("Channel ID: " + data.user_id);
-
-  // console.log(data);
-
-  subsBadges = data.subscriber_badges;
-  subsBadges.sort((a, b) => (a.months > b.months ? 1 : -1));
-
-  console.log(subsBadges);
-
-  return { channelID: data.user_id, chatroomID: data.chatroom.id };
+  console.log(`Fetching channel info for ${channelName}...`);
+  subBadges = data.subscriber_badges;
+  subBadges.sort((a, b) => (a.months > b.months ? 1 : -1));
+  return data.chatroom.id;
 }
 
-async function main() {
-  const { channelID, chatroomID } = await fetchChannelID(channelName);
-  connection(chatroomID);
-  // console.log(channelID);
+async function handleMessages(msg) {
+  // console.log(msg);
+
+  let emoteRegex = /\[emote:(\d+):?([\w\s\-~!@#$%^&*()_+=\{}\\|;:'",.<>\/?]+)\]/g; // Old regex: /\[emote:(\d+):(\w+)\]/g // New regex: /\[emote:(\d+):(\w+\s?\w*)\]/g
+  let emoteMatches = msg.content.match(emoteRegex);
+  if (emoteMatches) {
+    for (let i = 0; i < emoteMatches.length; i++) {
+      let emoteMatch = emoteMatches[i];
+      let emoteId = emoteMatch.match(/\[emote:(\d+):?([\w\s\-~!@#$%^&*()_+=\{}\\|;:'",.<>\/?]+)\]/)[1];
+
+      msg.content = msg.content.replace(emoteMatch, `<img src="https://d2egosedh0nm8l.cloudfront.net/emotes/${emoteId}/fullsize" class="emote">`);
+    }
+  }
+
+  let kickEmojiRegex = /\[emoji:(\w+)\]/g;
+  let kickEmojiMatches = msg.content.match(kickEmojiRegex);
+  if (kickEmojiMatches) {
+    for (let i = 0; i < kickEmojiMatches.length; i++) {
+      let kickEmojiMatch = kickEmojiMatches[i];
+      let kickEmojiName = kickEmojiMatch.match(/\[emoji:(\w+)\]/)[1];
+
+      msg.content = msg.content.replace(
+        kickEmojiMatch,
+        `<img src="https://dbxmjjzl5pc1g.cloudfront.net/9ad84c86-99f0-4f0a-8e1a-baccf20502b9/images/emojis/${kickEmojiName}.png" class="emote">`
+      );
+    }
+  }
+
+  const user = {
+    username: msg.sender.username,
+    id: msg.sender.id,
+    color: msg.sender.identity.color,
+    slug: msg.sender.slug,
+    badges: msg.sender.identity.badges,
+  };
+
+  const messageElement = document.createElement("div");
+  const userBadges = document.createElement("span");
+  const username = document.createElement("span");
+  const messageContent = document.createElement("span");
+
+  messageElement.classList.add("message");
+  userBadges.classList.add("user-badges");
+  username.classList.add("username");
+  username.style.color = user.color;
+  messageContent.classList.add("message-content");
+
+  username.innerText = `${user.username} :`;
+  messageContent.innerHTML = msg.content;
+
+  messageContent.setAttribute("data-sender-id", user.id);
+  messageContent.setAttribute("message-id", msg.id);
+  messageContent.setAttribute("timestamp", msg.created_at);
+
+  if (user.badges.length > 0) {
+    userBadges.innerHTML = await getBadges(user.badges);
+  } else {
+    userBadges.innerHTML = "";
+  }
+
+  username.prepend(userBadges);
+  messageElement.appendChild(username);
+  messageElement.appendChild(messageContent);
+
+  console.log(messageElement);
+  console.log(user.username + " : " + msg.content);
+
+  document.getElementById("chat-container").appendChild(messageElement);
+}
+
+async function handleClearMessages() {
+  console.log("Clearing messages...");
+
+  document.getElementById("events").innerHTML = "Clearing messages...";
+  document.getElementById("events").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("events").innerHTML = "";
+    document.getElementById("events").style.display = "none";
+  }, 5000);
+}
+
+async function handleDeletedMessages(msg) {
+  console.log("Deleting message...");
+
+  console.log(msg.message.id);
+
+  let message = document.querySelector(`[message-id="${msg.message.id}"]`);
+
+  if (message) {
+    message.parentElement.remove();
+  } else {
+    console.log("Message not found");
+  }
+}
+
+async function handleBans(msg) {
+  console.log("Banning user...");
+
+  console.log(msg.user.id);
+
+  let message = document.querySelector(`[data-sender-id="${msg.user.id}"]`);
+
+  if (message) {
+    message.parentElement.remove();
+  } else {
+    console.log("Message not found");
+  }
 }
 
 async function getBadges(userBadges) {
@@ -213,11 +168,77 @@ async function getBadges(userBadges) {
   return badgesArray;
 }
 
+async function main() {
+  const channelId = await getChannelInfo();
+
+  console.log("Chatroom ID: " + channelId);
+
+  const chat = new WebSocket(url);
+  console.log("Connecting to Pusher...");
+  console.log(chat);
+
+  chat.onerror = (error) => {
+    console.log("Error: " + error);
+  };
+
+  chat.onopen = () => {
+    console.log("Connected to Pusher");
+    document.getElementById("events").innerHTML = "Connected";
+    // 2 seconds after connecting, remove the loading screen
+    setTimeout(() => {
+      document.getElementById("events").innerHTML = "";
+      document.getElementById("events").style.display = "none";
+    }, 1000);
+    chat.send(
+      JSON.stringify({
+        event: "pusher:subscribe",
+        data: {
+          auth: "",
+          channel: `chatrooms.${channelId}.v2`,
+        },
+      })
+    );
+    chat.send(
+      JSON.stringify({
+        event: "pusher:subscribe",
+        data: {
+          auth: "",
+          channel: `channel.${channelId + 2}`,
+        },
+      })
+    );
+  };
+
+  chat.onmessage = (event) => {
+    let parsedMsg = JSON.parse(event.data);
+
+    const msg = JSON.parse(parsedMsg.data);
+
+    const events = {
+      chatMessage: "App\\Events\\ChatMessageEvent",
+      messageDeleted: "App\\Events\\MessageDeletedEvent",
+      userBanned: "App\\Events\\UserBannedEvent",
+      chatroomClear: "App\\Events\\ChatroomClearEvent",
+    };
+
+    switch (parsedMsg.event) {
+      case events.chatMessage:
+        handleMessages(msg);
+        break;
+      case events.messageDeleted:
+        handleDeletedMessages(msg);
+        break;
+      case events.userBanned:
+        handleBans(msg);
+        break;
+      case events.chatroomClear:
+        handleClearMessages(msg);
+        break;
+      default:
+        console.log("Unknown or event not catched : " + parsedMsg.event);
+        break;
+    }
+  };
+}
+
 main();
-
-// TODO LIST
-// 1. Add emotes to chat
-// 2. Possibly to change the font size of the chat (in parameters,etc..)
-// 3. Possibly to change the font family of the chat (in parameters,etc..)
-
-// GETS FEEEDBACK ON IT AND THEN IMPLEMENTS IT

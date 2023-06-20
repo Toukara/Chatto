@@ -37,6 +37,12 @@ body {
   margin-right: 4px;
 }
 
+.emote {
+  width: 25px;
+  height: 25px;
+  margin-left: 4px;
+}
+
 @keyframes slide-in {
   0% {
     transform: translateX(100%);
@@ -48,4 +54,13 @@ body {
 
 .message:last-child {
   animation: slide-in 0.5s ease-in-out;
+}
+
+#events {
+  position: absolute;
+  padding: 16px;
+  bottom: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: rgb(194, 128, 128);
 }
