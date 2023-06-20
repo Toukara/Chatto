@@ -212,6 +212,8 @@ async function main() {
   chat.onmessage = (event) => {
     let parsedMsg = JSON.parse(event.data);
 
+    if (parsedMsg.event == "pusher_internal:subscription_succeeded" || parsedMsg.event == "pusher:connection_established") return;
+
     const msg = JSON.parse(parsedMsg.data);
 
     const events = {
@@ -240,5 +242,7 @@ async function main() {
     }
   };
 }
+
+
 
 main();
