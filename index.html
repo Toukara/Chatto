@@ -2,14 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <title>Kick Chat Overlay</title>
   </head>
   <body>
-    <div id="events"></div>
-    <div id="chat-container"></div>
-    <script src="main.js"></script>
+    <div class="container">
+      <h1 class="title">Kick Chat Overlay</h1>
+
+      <h2 class="instruction">Enter a channel name</h2>
+
+      <div class="buttons">
+        <input type="text" id="channelName" placeholder="toukara" />
+        <button>Go To Chat</button>
+      </div>
+
+      <p class="blabla">The link will be copied in your clipboard</p>
+
+      <div class="footer">
+        <p class="footer-text">Made by <a href="https://github.com/toukara">toukara</a></p>
+      </div>
+    </div>
+    <script>
+      const channelName = document.getElementById("channelName");
+      const button = document.querySelector("button");
+
+      button.addEventListener("click", async () => {
+        if (channelName.value === "") {
+          alert("Please enter a channel name");
+        } else {
+          await navigator.clipboard.writeText(`${window.location.href}chat.html?channel=${channelName.value}`);
+          window.location.href = `chat.html?channel=${channelName.value}`;
+        }
+      });
+    </script>
   </body>
 </html>

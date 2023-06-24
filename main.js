@@ -29,11 +29,11 @@ async function fetchMsg(url) {
   return response;
 }
 
-async function getChannelInfo() {
-  const response = await fetchMsg(`https://kick.com/api/v2/channels/${channelName}`);
+async function getChannelInfo(name) {
+  const response = await fetchMsg(`https://kick.com/api/v2/channels/${name}`);
   const data = await response.json();
 
-  console.log(`Fetching channel info for ${channelName}...`);
+  console.log(`Fetching channel info for ${name}...`);
   subBadges = data.subscriber_badges;
   subBadges.sort((a, b) => (a.months > b.months ? 1 : -1));
   return data.chatroom.id;
@@ -172,7 +172,7 @@ async function getBadges(userBadges) {
 }
 
 async function main() {
-  const channelId = await getChannelInfo();
+  const channelId = await getChannelInfo(channelName);
 
   console.log("Chatroom ID: " + channelId);
 
