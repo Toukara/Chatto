@@ -110,10 +110,11 @@ async function handleMessages(msg) {
 }
 
 async function handleClearMessages() {
-  console.log("Clearing messages...");
-
   document.getElementById("events").innerHTML = "Clearing messages...";
   document.getElementById("events").style.display = "block";
+
+  document.getElementById("chat-container").innerHTML = "";
+
   setTimeout(() => {
     document.getElementById("events").innerHTML = "";
     document.getElementById("events").style.display = "none";
@@ -231,12 +232,15 @@ async function main() {
         handleMessages(msg);
         break;
       case events.messageDeleted:
+        console.log("Deleting message...");
         handleDeletedMessages(msg);
         break;
       case events.userBanned:
+        console.log("Banning user...");
         handleBans(msg);
         break;
       case events.chatroomClear:
+        console.log("Clearing messages...");
         handleClearMessages(msg);
         break;
       default:
