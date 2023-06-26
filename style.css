@@ -78,6 +78,12 @@ input:focus {
   margin-top: 6px;
 }
 
+a {
+  color: white;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
 #chat-container {
   position: absolute;
   padding: 16px;
