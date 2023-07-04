@@ -4,20 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <meta name="keywords" content="kick streams, kick streams overlay, streams overlay, overlay chat, stream chat" />
+    <script src="https://kit.fontawesome.com/89ef34a0b5.js" crossorigin="anonymous"></script>
     <title>Chatto</title>
   </head>
   <body>
     <div class="container">
-      <h1 class="title">CHATTO</h1>
-
-      <h2 class="instruction">Enter a channel name</h2>
-
-      <div class="buttons">
-        <input type="text" id="channelName" placeholder="toukara" />
-        <button>Go To Chat</button>
+      <div class="title-container">
+        <h1 class="title">CHATTO</h1>
+        <p class="beta">Beta</p>
       </div>
 
-      <p class="blabla">The link will be copied in your clipboard</p>
+      <div class="buttons">
+        <div class="params">
+          <p>Kick Channel Name</p>
+          <input type="text" id="channelName" placeholder="toukara" class="inputChannelname" />
+        </div>
+        <div class="params">
+          <p>Width</p>
+          <input type="number" id="width" placeholder="500" class="inputChannelname" min="250" max="600" step="5" />
+        </div>
+        <button class="generate">Generate Link</button>
+      </div>
+
+      <p class="information">The link will be copied in your clipboard</p>
 
       <div class="footer">
         <p class="footer-text">Made by <a href="https://github.com/toukara" target="_blank">Toukara</a></p>
@@ -25,14 +35,41 @@
     </div>
     <script>
       const channelName = document.getElementById("channelName");
+      const width = document.getElementById("width");
       const button = document.querySelector("button");
 
       button.addEventListener("click", async () => {
         if (channelName.value === "") {
           alert("Please enter a channel name");
         } else {
-          await navigator.clipboard.writeText(`${window.location.href}chat.html?channel=${channelName.value}`);
-          window.location.href = `chat.html?channel=${channelName.value}`;
+          await navigator.clipboard.writeText(`${window.location.href}chat.html?channel=${channelName.value}${width.value ? `&width=${width.value}` : ""}`);
+          const messageBox = document.createElement("div");
+          messageBox.classList.add("notification-box");
+
+          const notificationContent = document.createElement("div");
+          notificationContent.classList.add("notification-content");
+
+          const notificationIcon = document.createElement("i");
+          notificationIcon.classList.add("fa", "sharp", "fa-solid", "fa-check", "checked");
+
+          const notifcationTitle = document.createElement("p");
+          notifcationTitle.classList.add("notification-title");
+          notifcationTitle.innerText = "Success";
+
+          const notificationMessage = document.createElement("p");
+          notificationMessage.classList.add("notification-message");
+          notificationMessage.innerText = "Link copied to clipboard";
+
+          notificationContent.appendChild(notificationIcon);
+          notificationContent.appendChild(notifcationTitle);
+          notificationContent.appendChild(notificationMessage);
+
+          messageBox.appendChild(notificationContent);
+
+          document.body.appendChild(messageBox);
+          setTimeout(() => {
+            document.body.removeChild(messageBox);
+          }, 7000);
         }
       });
     </script>

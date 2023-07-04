@@ -1,8 +1,7 @@
 const urlParams = new URLSearchParams(window.location.search);
+// http://127.0.0.1:5501/chat.html?channel=toukaratest&width=200
 const channelName = urlParams.get("channel");
-
-console;
-// const channelName = "toukara";
+const width = urlParams.get("width");
 
 const deleteMessageTimer = 300000; // 5 minutes per default
 
@@ -33,15 +32,12 @@ async function getChannelInfo(name) {
   const response = await fetchMsg(`https://kick.com/api/v2/channels/${name}`);
   const data = await response.json();
 
-  console.log(`Fetching channel info for ${name}...`);
   subBadges = data.subscriber_badges;
   subBadges.sort((a, b) => (a.months > b.months ? 1 : -1));
   return data.chatroom.id;
 }
 
 async function handleMessages(msg) {
-  // console.log(msg);
-
   let emoteRegex = /\[emote:(\d+):?([\w\s\-~!@#$%^&*()_+=\{}\\|;:'",.<>\/?]+)\]/g; // Old regex: /\[emote:(\d+):(\w+)\]/g // New regex: /\[emote:(\d+):(\w+\s?\w*)\]/g
   let emoteMatches = msg.content.match(emoteRegex);
   if (emoteMatches) {
@@ -86,7 +82,7 @@ async function handleMessages(msg) {
   username.style.color = user.color;
   messageContent.classList.add("message-content");
 
-  username.innerText = `${user.username} :`;
+  username.innerText = `${user.username} : `;
   messageContent.innerHTML = msg.content;
 
   messageContent.setAttribute("data-sender-id", user.id);
@@ -99,12 +95,13 @@ async function handleMessages(msg) {
     userBadges.innerHTML = "";
   }
 
+  if (width) {
+    messageElement.style.width = width + "px";
+  }
+
   username.prepend(userBadges);
   messageElement.appendChild(username);
   messageElement.appendChild(messageContent);
-
-  console.log(messageElement);
-  console.log(user.username + " : " + msg.content);
 
   document.getElementById("chat-container").appendChild(messageElement);
 }
@@ -122,10 +119,6 @@ async function handleClearMessages() {
 }
 
 async function handleDeletedMessages(msg) {
-  console.log("Deleting message...");
-
-  console.log(msg.message.id);
-
   let message = document.querySelector(`[message-id="${msg.message.id}"]`);
 
   if (message) {
@@ -136,10 +129,6 @@ async function handleDeletedMessages(msg) {
 }
 
 async function handleBans(msg) {
-  console.log("Banning user...");
-
-  console.log(msg.user.id);
-
   let message = document.querySelector(`[data-sender-id="${msg.user.id}"]`);
 
   if (message) {
@@ -168,18 +157,14 @@ async function getBadges(userBadges) {
     badgesArray += `<img src="./assets/svg/${userBadges[i].type}.svg" class="badge"></img>`;
   }
 
-  // console.log(badgesArray);
   return badgesArray;
 }
 
 async function main() {
   const channelId = await getChannelInfo(channelName);
 
-  console.log("Chatroom ID: " + channelId);
-
   const chat = new WebSocket(url);
   console.log("Connecting to Pusher...");
-  console.log(chat);
 
   chat.onerror = (error) => {
     console.log("Error: " + error);
