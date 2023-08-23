@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <meta name="keywords" content="kick streams, kick streams overlay, streams overlay, overlay chat, stream chat" />
+
+    <meta property="og:image" content="./assets/img/preview.jpg" />
+    <meta property="og:title" content="Chatto" />
+    <meta property="og:description" content="A simple chat overlay for your streams" />
+    <meta property="og:url" content="https://toukara.github.io/Chatto/" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:image" content="./assets/img/preview.jpg" />
+    <meta name="twitter:card" content="./assets/img/preview.jpg" />
+    <meta name="twitter:site" content="@Benjamincms_" />
+    <meta name="twitter:creator" content="@Benjamincms_" />
+    <meta name="twitter:title" content="Chatto" />
+    <meta name="twitter:description" content="A simple chat overlay for your streams" />
+
+    <script src="https://kit.fontawesome.com/89ef34a0b5.js" crossorigin="anonymous"></script>
+    <title>Chatto</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title-container">
+        <h1 class="title">CHATTO</h1>
+        <p class="beta">Beta</p>
+      </div>
+
+      <div class="buttons">
+        <div class="params">
+          <p class="inputName">Kick Channel Name</p>
+          <input type="text" id="channelName" placeholder="toukara" class="inputChannelname" />
+        </div>
+        <button class="generate">Generate Link</button>
+      </div>
+      <div id="informations">
+        <p class="information">The link will be copied in your clipboard</p>
+      </div>
+
+      <div class="demo">
+        <h2 class="demo-title">What it will look !</h2>
+        <div class="message-demo">
+          <!-- <div class="message">
+            <span class="username" style="color: rgb(233, 17, 60)">
+              <span class="user-badges"><img src="./assets/svg/broadcaster.svg" class="badge" /></span>Toukara :
+            </span>
+            <span class="message-content" data-sender-id="5918094" message-id="a53bcb38-be09-4933-abd7-6e3e077e4312" timestamp="2023-08-07T23:52:10+00:00">
+              Hello World !
+            </span>
+          </div> -->
+        </div>
+      </div>
+
+      <div class="settings">
+        <div class="params flex-1">
+          <p class="inputName">Width (<span class="value">525</span> px)</p>
+          <input type="range" min="250" max="800" step="5" placeholder="525" id="width" value="525" />
+          <p class="information">Change the width</p>
+        </div>
+        <div class="params flex-1">
+          <p class="inputName">Font Size (<span class="value">12</span> px)</p>
+          <input type="range" min="8" max="48" step="1" value="12" id="fontSize" />
+          <p class="information">Change the font size</p>
+        </div>
+        <div class="params flex-2">
+          <p class="inputName">Font Color</p>
+          <div class="colors">
+            <input type="color" id="color" name="color" value="#ffffff" />
+            <p id="colorSelected">#ffffff</p>
+          </div>
+          <p class="information">Change the font color</p>
+        </div>
+        <div class="params flex-2">
+          <p class="inputName">Badges</p>
+          <label class="checkbox bounce">
+            <input type="checkbox" checked />
+            <svg viewBox="0 0 21 21">
+              <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+            </svg>
+          </label>
+          <p class="information">Show on/off users badges</p>
+        </div>
+        <div class="params flex-2">
+          <p class="inputName">Font family</p>
+          <select name="fontList" id="fontList">
+            <option value="Arial">Arial</option>
+          </select>
+          <p class="information">Change font family</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p class="footer-text">
+          Made by
+          <a href="https://github.com/toukara" target="_blank">Toukara</a>
+        </p>
+      </div>
+    </div>
+    <script>
+      const channelName = document.getElementById("channelName");
+      const button = document.querySelector("button");
+
+      const width = document.getElementById("width");
+      const fontSize = document.getElementById("fontSize");
+
+      const color = document.getElementById("color");
+
+      const rangeElement = document.querySelectorAll('input[type="range"]');
+      const checkboxElement = document.querySelector("input[type=checkbox]");
+
+      const fontList = document.getElementById("fontList");
+
+      const rangeValue = function (el) {
+        const newValue = el.value;
+
+        const target = el.parentNode.querySelector(".value");
+        target.innerHTML = newValue;
+
+        if (el.id === "width") {
+          // document.querySelector(".message").style.width = `${newValue}px`;
+          // document.querySelector(".message").style. = `${newValue}px`;
+          const messages = document.querySelectorAll(".message");
+          messages.forEach((message) => {
+            message.style.width = `${newValue}px`;
+          });
+        } else {
+          document.querySelector(".message-demo").style.fontSize = `${newValue}px`;
+          const badges = document.querySelectorAll(".badge");
+          badges.forEach((badge) => {
+            badge.style.width = `${newValue}px`;
+            badge.style.height = `${newValue}px`;
+          });
+        }
+      };
+
+      color.addEventListener("input", (element) => {
+        changeTextColor(element.target);
+      });
+
+      color.addEventListener("change", (element) => {
+        changeTextColor(element.target);
+      });
+
+      function changeTextColor(color) {
+        const colorSelected = document.getElementById("colorSelected");
+        const messages = document.querySelectorAll(".message");
+
+        colorSelected.innerText = color.value;
+        messages.forEach((message) => {
+          message.style.color = color.value;
+        });
+
+        const textColor = document.querySelector(".username");
+      }
+
+      rangeElement.forEach((el) => {
+        el.addEventListener("input", (element) => {
+          rangeValue(element.target);
+        });
+      });
+
+      checkboxElement.addEventListener("change", function () {
+        const badges = document.querySelectorAll(".badge");
+        if (this.checked) {
+          badges.forEach((badge) => {
+            badge.style.display = "inline";
+          });
+        } else {
+          badges.forEach((badge) => {
+            badge.style.display = "none";
+          });
+        }
+      });
+
+      fontList.addEventListener("change", (element) => {
+        const messages = document.querySelectorAll(".message");
+        messages.forEach((message) => {
+          message.style.fontFamily = element.target.value;
+        });
+      });
+
+      button.addEventListener("click", async () => {
+        if (channelName.value === "") {
+          alert("Please enter a channel name");
+        } else {
+          var colorValue = color.value.split("#")[1];
+          await navigator.clipboard.writeText(
+            `${window.location.origin}/chat.html?channel=${channelName.value}&width=${width.value}&fontSize=${fontSize.value}&color=${colorValue}&badges=${checkboxElement.checked}&font=${fontList.value}`
+          );
+
+          console.log({
+            channel: channelName.value,
+            width: width.value,
+            fontSize: fontSize.value,
+            color: color.value,
+            badges: checkboxElement.checked,
+            font: fontList.value,
+          });
+
+          const messageBox = document.createElement("div");
+          messageBox.classList.add("notification-box");
+
+          const notificationContent = document.createElement("div");
+          notificationContent.classList.add("notification-content");
+
+          const notificationIcon = document.createElement("i");
+          notificationIcon.classList.add("fa", "sharp", "fa-solid", "fa-check", "checked");
+
+          const notifcationTitle = document.createElement("p");
+          notifcationTitle.classList.add("notification-title");
+          notifcationTitle.innerText = "Success";
+
+          const notificationMessage = document.createElement("p");
+          notificationMessage.classList.add("notification-message");
+          notificationMessage.innerText = "Link copied to clipboard";
+
+          notificationContent.appendChild(notificationIcon);
+          notificationContent.appendChild(notifcationTitle);
+          notificationContent.appendChild(notificationMessage);
+
+          messageBox.appendChild(notificationContent);
+
+          document.body.appendChild(messageBox);
+          setTimeout(() => {
+            document.body.removeChild(messageBox);
+          }, 7000);
+        }
+      });
+
+      const demoMessage = () => {
+        const messageDemo = document.querySelector(".message-demo");
+        const message = document.createElement("div");
+        message.classList.add("message");
+
+        const username = document.createElement("span");
+        username.classList.add("username");
+        username.style.color = `#${Math.floor(Math.random() * 16777215).toString(16)} `;
+        const badges = ["broadcaster", "founder", "og", "moderator", "founder", "vip"];
+        username.innerHTML = `<span class="user-badges"><img src="./assets/svg/${
+          badges[Math.floor(Math.random() * badges.length)]
+        }.svg" class="badge" style="width: ${fontSize.value}px; height: ${fontSize.value}px;" /></span>${generateName()} :`;
+
+        const messageContent = document.createElement("span");
+        messageContent.classList.add("message");
+        messageContent.setAttribute("data-sender-id", "5918094");
+        messageContent.setAttribute("message-id", "a53bcb38-be09-4933-abd7-6e3e077e4312");
+        messageContent.setAttribute("timestamp", new Date().toUTCString());
+        messageContent.innerText = `${generateMessage()}`;
+        messageContent.style.color = color.value;
+
+        message.appendChild(username);
+        message.appendChild(messageContent);
+        message.classList.add("animation");
+
+        message.style.width = `${width.value}px`;
+        messageDemo.appendChild(message);
+      };
+
+      setInterval(() => {
+        demoMessage();
+      }, 3500);
+
+      demoMessage();
+
+      setInterval(() => {
+        const messages = document.querySelectorAll(".message");
+        if (messages.length > 4) {
+          messages[0].remove();
+        }
+      }, 1000);
+
+      document.fonts.ready.then((fontFaceSet) => {
+        let fontFaceSetArray = new Array();
+
+        fontFaceSet.forEach((fontFace) => {
+          // check if font is in the array already
+          if (!fontFaceSetArray.includes(fontFace.family) && !fontFace.family.includes("FontAwesome")) {
+            fontFaceSetArray.push(fontFace.family);
+          }
+        });
+
+        const fontList = document.getElementById("fontList");
+        fontFaceSetArray.forEach((font) => {
+          const option = document.createElement("option");
+          option.value = font;
+          option.innerText = font;
+          option.defaultSelected = font === "Noto Sans";
+          fontList.appendChild(option);
+        });
+
+        console.log(fontFaceSetArray);
+      });
+
+      function generateName() {
+        // generate random name from json file
+
+        const names = [
+          "User123",
+          "GamerGirl99",
+          "MLGProSniper",
+          "TwitchLurker42",
+          "NoobPlayer123",
+          "PoggersFan",
+          "EmoteAddict456",
+          "PunnyStreamer",
+          "MusicMaestro",
+          "SaltKing23",
+          "PositiveVibesOnly",
+          "StreamSniper007",
+          "HypeTrainConductor",
+          "RetroGamerFanatic",
+          "FoodieViewer",
+          "TeamNoSleep",
+          "CopyPastaMaster",
+          "WholesomeChat",
+          "ConspiracyNinja",
+          "FitnessFreak87",
+        ];
+
+        const name = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 1000);
+
+        return name;
+      }
+
+      function generateMessage() {
+        const messages = [
+          "Just hit a new high score! PogChamp",
+          "Who's hyped for the new update? MLG HYPE",
+          "lurk mode activated 👀",
+          "Can someone help me with this boss fight? I'm stuck 🙏",
+          "POGGERS! That clutch play though!",
+          "Kappa Kappa Kappa Kappa Kappa",
+          "Why don't scientists trust atoms? Because they make up everything! 4Head",
+          "🎵 Now playing: Your favorite tune! 🎶",
+          "RNGesus hates me today... I can feel it BibleThump",
+          "Remember, folks, it's all about having fun! Keep smiling! 😄",
+          "Just dropping by to say hi to my favorite streamer!",
+          "HYPE TRAIN! Get on board with those subs and bits! CHOO CHOO!",
+          "This game gives me serious nostalgia vibes. Anyone else?",
+          "Watching and drooling... I really need to order pizza after this 🍕",
+          "It's 3 AM, and I'm still here! Timezones, am I right?",
+          "🍝 Spaghetti time! 🍝",
+          "Shoutout to the mods keeping this chat awesome! 🌟",
+          "I've got a theory: the NPCs are plotting against us!",
+          "Remember to stay hydrated, gamers! 💧💪",
+        ];
+        const message = messages[Math.floor(Math.random() * messages.length)];
+
+        return message;
+      }
+    </script>
+
+    <style>
+      html,
+      body {
+        background-color: rgb(27, 36, 48);
+      }
+    </style>
+  </body>
+</html>
