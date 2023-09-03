@@ -3,11 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< HEAD
     <link rel="stylesheet" href="index.css" />
     <meta name="keywords" content="kick streams, kick streams overlay, streams overlay, overlay chat, stream chat" />
     <meta name="description" content="Kick streams is a free overlay chat for your stream" />
-=======
     <link rel="stylesheet" href="style.css" />
     <meta name="keywords" content="kick streams, kick streams overlay, streams overlay, overlay chat, stream chat" />
 
@@ -23,7 +21,6 @@
     <meta name="twitter:creator" content="@Benjamincms_" />
     <meta name="twitter:title" content="Chatto" />
     <meta name="twitter:description" content="A simple chat overlay for your streams" />
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
 
     <script src="https://kit.fontawesome.com/89ef34a0b5.js" crossorigin="anonymous"></script>
     <title>Chatto</title>
@@ -32,7 +29,6 @@
     <div class="container">
       <div class="title-container">
         <h1 class="title">CHATTO</h1>
-<<<<<<< HEAD
         <p class="subtitle">Beta</p>
       </div>
 
@@ -106,8 +102,7 @@
             <a href="https://github.com/toukara" target="_blank">Toukara</a>
           </p>
         </div>
-=======
-        <p class="beta">Beta</p>
+       <p class="beta">Beta</p>
       </div>
 
       <div class="buttons">
@@ -126,12 +121,10 @@
 
       <div class="footer">
         <p class="footer-text">Made by <a href="https://github.com/toukara" target="_blank">Toukara</a></p>
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
       </div>
     </div>
     <script>
       const channelName = document.getElementById("channelName");
-<<<<<<< HEAD
       const button = document.querySelector("button");
 
       const width = document.getElementById("width");
@@ -215,16 +208,16 @@
           message.style.fontFamily = element.target.value;
         });
       });
-=======
+
       const width = document.getElementById("width");
       const button = document.querySelector("button");
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
+
 
       button.addEventListener("click", async () => {
         if (channelName.value === "") {
           alert("Please enter a channel name");
         } else {
-<<<<<<< HEAD
+
           var colorValue = color.value.split("#")[1];
           await navigator.clipboard.writeText(
             `${window.location.origin}/chat.html?channel=${channelName.value}&width=${width.value}&fontSize=${fontSize.value}&color=${colorValue}&badges=${checkboxElement.checked}&font=${fontList.value}`
@@ -239,9 +232,9 @@
             font: fontList.value,
           });
 
-=======
+
           await navigator.clipboard.writeText(`${window.location.href}chat.html?channel=${channelName.value}${width.value ? `&width=${width.value}` : ""}`);
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
+
           const messageBox = document.createElement("div");
           messageBox.classList.add("notification-box");
 
@@ -271,7 +264,6 @@
           }, 7000);
         }
       });
-<<<<<<< HEAD
 
       // Generates a demo message and appends it to the message demo element.
       const demoMessage = () => {
@@ -444,8 +436,6 @@
         clearMessages();
         demoMessage();
       }
-=======
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
     </script>
   </body>
 </html>
