@@ -95,39 +95,12 @@
         </div>
       </div>
 
-      <div class="container">
-        <div class="footer">
-          <p class="footer-text">
-            Made by
-            <a href="https://github.com/toukara" target="_blank">Toukara</a>
-          </p>
-        </div>
-       <p class="beta">Beta</p>
-      </div>
-
-      <div class="buttons">
-        <div class="params">
-          <p>Kick Channel Name</p>
-          <input type="text" id="channelName" placeholder="toukara" class="inputChannelname" />
-        </div>
-        <div class="params">
-          <p>Width</p>
-          <input type="number" id="width" placeholder="500" class="inputChannelname" min="250" max="600" step="5" />
-        </div>
-        <button class="generate">Generate Link</button>
-      </div>
-
-      <p class="information">The link will be copied in your clipboard</p>
-
       <div class="footer">
         <p class="footer-text">Made by <a href="https://github.com/toukara" target="_blank">Toukara</a></p>
       </div>
     </div>
     <script>
       const channelName = document.getElementById("channelName");
-      const button = document.querySelector("button");
-
-      const width = document.getElementById("width");
       const fontSize = document.getElementById("fontSize");
 
       const color = document.getElementById("color");
@@ -212,12 +185,10 @@
       const width = document.getElementById("width");
       const button = document.querySelector("button");
 
-
       button.addEventListener("click", async () => {
         if (channelName.value === "") {
           alert("Please enter a channel name");
         } else {
-
           var colorValue = color.value.split("#")[1];
           await navigator.clipboard.writeText(
             `${window.location.origin}/chat.html?channel=${channelName.value}&width=${width.value}&fontSize=${fontSize.value}&color=${colorValue}&badges=${checkboxElement.checked}&font=${fontList.value}`
@@ -231,7 +202,6 @@
             badges: checkboxElement.checked,
             font: fontList.value,
           });
-
 
           await navigator.clipboard.writeText(`${window.location.href}chat.html?channel=${channelName.value}${width.value ? `&width=${width.value}` : ""}`);
 
