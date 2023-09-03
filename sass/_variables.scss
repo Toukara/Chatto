@@ -1,0 +1,10 @@
+// variables
+$primary-color: rgb(81, 85, 126);
+$darken-primary-color: darken($primary-color, 10%);
+$lighten-primary-color: lighten($primary-color, 10%);
+
+$font-stack: "Noto Sans", sans-serif;
+
+$font-color: rgb(255, 255, 255);
+$darken-font-color: darken($font-color, 10%);
+

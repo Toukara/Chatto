@@ -3,21 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="index.css" />
     <meta name="keywords" content="kick streams, kick streams overlay, streams overlay, overlay chat, stream chat" />
-
-    <meta property="og:image" content="./assets/img/preview.jpg" />
-    <meta property="og:title" content="Chatto" />
-    <meta property="og:description" content="A simple chat overlay for your streams" />
-    <meta property="og:url" content="https://toukara.github.io/Chatto/" />
-    <meta property="og:type" content="website" />
-
-    <meta name="twitter:image" content="./assets/img/preview.jpg" />
-    <meta name="twitter:card" content="./assets/img/preview.jpg" />
-    <meta name="twitter:site" content="@Benjamincms_" />
-    <meta name="twitter:creator" content="@Benjamincms_" />
-    <meta name="twitter:title" content="Chatto" />
-    <meta name="twitter:description" content="A simple chat overlay for your streams" />
+    <meta name="description" content="Kick streams is a free overlay chat for your stream" />
 
     <script src="https://kit.fontawesome.com/89ef34a0b5.js" crossorigin="anonymous"></script>
     <title>Chatto</title>
@@ -26,32 +14,32 @@
     <div class="container">
       <div class="title-container">
         <h1 class="title">CHATTO</h1>
-        <p class="beta">Beta</p>
+        <p class="subtitle">Beta</p>
       </div>
 
-      <div class="buttons">
+      <div class="buttons-container">
         <div class="params">
           <p class="inputName">Kick Channel Name</p>
           <input type="text" id="channelName" placeholder="toukara" class="inputChannelname" />
         </div>
-        <button class="generate">Generate Link</button>
+        <button class="button--primary">Generate Link</button>
       </div>
       <div id="informations">
         <p class="information">The link will be copied in your clipboard</p>
       </div>
 
       <div class="demo">
-        <h2 class="demo-title">What it will look !</h2>
-        <div class="message-demo">
-          <!-- <div class="message">
-            <span class="username" style="color: rgb(233, 17, 60)">
-              <span class="user-badges"><img src="./assets/svg/broadcaster.svg" class="badge" /></span>Toukara :
-            </span>
-            <span class="message-content" data-sender-id="5918094" message-id="a53bcb38-be09-4933-abd7-6e3e077e4312" timestamp="2023-08-07T23:52:10+00:00">
-              Hello World !
-            </span>
-          </div> -->
-        </div>
+        <h2 class="demo-title">
+          What it will look !
+          <button class="resetBtn" onclick="resetParams()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+              <path
+                d="M125.7 160H176c17.7 0 32 14.3 32 32s-14.3 32-32 32H48c-17.7 0-32-14.3-32-32V64c0-17.7 14.3-32 32-32s32 14.3 32 32v51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"
+              />
+            </svg>
+          </button>
+        </h2>
+        <div class="message-demo"></div>
       </div>
 
       <div class="settings">
@@ -61,8 +49,8 @@
           <p class="information">Change the width</p>
         </div>
         <div class="params flex-1">
-          <p class="inputName">Font Size (<span class="value">12</span> px)</p>
-          <input type="range" min="8" max="48" step="1" value="12" id="fontSize" />
+          <p class="inputName">Font Size (<span class="value">16</span> px)</p>
+          <input type="range" min="8" max="48" step="1" value="16" id="fontSize" />
           <p class="information">Change the font size</p>
         </div>
         <div class="params flex-2">
@@ -92,11 +80,13 @@
         </div>
       </div>
 
-      <div class="footer">
-        <p class="footer-text">
-          Made by
-          <a href="https://github.com/toukara" target="_blank">Toukara</a>
-        </p>
+      <div class="container">
+        <div class="footer">
+          <p class="footer-text">
+            Made by
+            <a href="https://github.com/toukara" target="_blank">Toukara</a>
+          </p>
+        </div>
       </div>
     </div>
     <script>
@@ -113,6 +103,8 @@
 
       const fontList = document.getElementById("fontList");
 
+      // width, fontSize, color, badges
+
       const rangeValue = function (el) {
         const newValue = el.value;
 
@@ -120,14 +112,15 @@
         target.innerHTML = newValue;
 
         if (el.id === "width") {
-          // document.querySelector(".message").style.width = `${newValue}px`;
-          // document.querySelector(".message").style. = `${newValue}px`;
           const messages = document.querySelectorAll(".message");
           messages.forEach((message) => {
             message.style.width = `${newValue}px`;
           });
         } else {
-          document.querySelector(".message-demo").style.fontSize = `${newValue}px`;
+          document.querySelectorAll(".message").forEach((message) => {
+            message.style.fontSize = `${newValue}px`;
+          });
+
           const badges = document.querySelectorAll(".badge");
           badges.forEach((badge) => {
             badge.style.width = `${newValue}px`;
@@ -230,6 +223,7 @@
         }
       });
 
+      // Generates a demo message and appends it to the message demo element.
       const demoMessage = () => {
         const messageDemo = document.querySelector(".message-demo");
         const message = document.createElement("div");
@@ -238,10 +232,14 @@
         const username = document.createElement("span");
         username.classList.add("username");
         username.style.color = `#${Math.floor(Math.random() * 16777215).toString(16)} `;
-        const badges = ["broadcaster", "founder", "og", "moderator", "founder", "vip"];
-        username.innerHTML = `<span class="user-badges"><img src="./assets/svg/${
-          badges[Math.floor(Math.random() * badges.length)]
-        }.svg" class="badge" style="width: ${fontSize.value}px; height: ${fontSize.value}px;" /></span>${generateName()} :`;
+        if (checkboxElement.checked) {
+          const badges = ["broadcaster", "founder", "og", "moderator", "founder", "vip"];
+          username.innerHTML = `<span class="user-badges"><img src="./assets/svg/${
+            badges[Math.floor(Math.random() * badges.length)]
+          }.svg" class="badge" style="width: ${fontSize.value}px; height: ${fontSize.value}px;" /></span>${generateName()} :`;
+        } else {
+          username.innerHTML = generateName();
+        }
 
         const messageContent = document.createElement("span");
         messageContent.classList.add("message");
@@ -256,6 +254,7 @@
         message.classList.add("animation");
 
         message.style.width = `${width.value}px`;
+        message.style.fontSize = `${fontSize.value}px`;
         messageDemo.appendChild(message);
       };
 
@@ -265,12 +264,23 @@
 
       demoMessage();
 
-      setInterval(() => {
+      function clearMessages() {
+        const messages = document.querySelectorAll(".message");
+        messages.forEach((message) => {
+          message.remove();
+        });
+      }
+
+      function clearMessageLimit() {
         const messages = document.querySelectorAll(".message");
         if (messages.length > 4) {
           messages[0].remove();
         }
-      }, 1000);
+      }
+
+      setInterval(() => {
+        clearMessageLimit();
+      }, 1500);
 
       document.fonts.ready.then((fontFaceSet) => {
         let fontFaceSetArray = new Array();
@@ -290,8 +300,6 @@
           option.defaultSelected = font === "Noto Sans";
           fontList.appendChild(option);
         });
-
-        console.log(fontFaceSetArray);
       });
 
       function generateName() {
@@ -351,13 +359,41 @@
 
         return message;
       }
-    </script>
 
-    <style>
-      html,
-      body {
-        background-color: rgb(27, 36, 48);
+      function resetParams() {
+        const defaultParams = {
+          width: 525,
+          fontSize: 16,
+          color: "#ffffff",
+          badges: true,
+          font: "Noto Sans",
+        };
+
+        function resetParamsToDefault() {
+          width.value = defaultParams.width;
+          width.parentNode.querySelector(".value").innerHTML = width.value;
+
+          fontSize.value = defaultParams.fontSize;
+          fontSize.parentNode.querySelector(".value").innerHTML = fontSize.value;
+
+          color.value = defaultParams.color;
+          document.getElementById("colorSelected").innerText = color.value;
+
+          checkboxElement.checked = defaultParams.badges;
+          fontList.value = defaultParams.font;
+        }
+
+        resetParamsToDefault();
+        console.log({
+          width: width.value,
+          fontSize: fontSize.value,
+          color: color.value,
+          badges: checkboxElement.checked,
+          font: fontList.value,
+        });
+        clearMessages();
+        demoMessage();
       }
-    </style>
+    </script>
   </body>
 </html>

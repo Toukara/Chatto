@@ -1,0 +1,77 @@
+@import "variables";
+
+.button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+}
+
+.button:hover {
+  background-color: $darken-primary-color;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.button:active {
+  background-color: $darken-primary-color;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button:disabled {
+  background-color: $lighten-primary-color;
+}
+
+.button:disabled:hover {
+  background-color: $lighten-primary-color;
+}
+
+.button:disabled:active {
+  background-color: $lighten-primary-color;
+}
+
+.button:disabled:focus {
+  outline: none;
+}
+
+.button--primary {
+  @extend .button;
+  padding: 14px;
+  font-size: 20px;
+  background: $primary-color;
+  border-radius: 6px;
+  font-weight: 700;
+  align-self: flex-end;
+}
+
+.resetBtn {
+  @extend .button;
+
+  background-color: $primary-color;
+  border-radius: 6px;
+  padding: 8px;
+
+  &:hover {
+    background-color: $darken-primary-color;
+  }
+
+  & > svg {
+    fill: $font-color;
+    height: 16px;
+    width: 16px;
+
+    // center the icon
+    display: block;
+    margin: 0 auto;
+
+    &:hover {
+      fill: white;
+    }
+  }
+
+  &:active {
+    background-color: $darken-primary-color;
+  }
+}

@@ -153,16 +153,7 @@ async function getBadges(userBadges) {
 
   for (let i = 0; i < userBadges.length; i++) {
     if (userBadges[i].type == "subscriber") {
-      let subAge = userBadges[i].count;
-      subsBadges.sort((a, b) => b.months - a.months);
-      for (let j = 0; j < subsBadges.length; j++) {
-        if (subAge >= subsBadges[j].months) {
-          badgesArray += `<img src="${subsBadges[j].badge_image.src}" class="badge ${subsBadges[j].text}"></img>`;
-          break;
-        }
-      }
-
-      continue;
+      return (badgesArray += ``);
     }
     badgesArray += `<img src="./assets/svg/${userBadges[i].type}.svg" class="badge"></img>`;
   }
