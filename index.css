@@ -634,10 +634,11 @@ input[type=color] {
   background: none;
   border: 0;
   cursor: pointer;
-  height: 2.5em;
+  height: 3em;
   padding: 0;
-  width: 2.5em;
+  width: 3em;
   margin-bottom: -8px;
+  border-radius: 4px;
 }
 input[type=color]::-webkit-color-swatch-wrapper {
   padding: 0;
@@ -834,6 +835,38 @@ select::-ms-expand {
   padding: 8vh;
   padding-bottom: 3vh;
   text-align: center;
+}
+
+@media screen and (max-width: 800px) {
+  .flex-2 {
+    flex: 1 1 100%;
+    flex-direction: column;
+  }
+  .settings {
+    max-width: 100%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .flex-2 {
+    flex: 1 1 100%;
+    flex-direction: column;
+  }
+  .container {
+    max-width: 100%;
+    width: 500px;
+  }
+  .buttons-container {
+    flex-direction: column;
+  }
+  .button--primary {
+    align-self: center;
+  }
+  .settings {
+    max-width: 100%;
+  }
+  .message {
+    width: 100%;
+  }
 }
 
 /*# sourceMappingURL=index.css.map */

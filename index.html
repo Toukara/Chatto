@@ -265,7 +265,20 @@
         message.appendChild(messageContent);
         message.classList.add("animation");
 
-        message.style.width = `${width.value}px`;
+        window.addEventListener("resize", (e) => {
+          if (e.target.innerWidth < 600) {
+            message.style.width = "100%";
+          } else {
+            message.style.width = `${width.value}px`;
+          }
+        });
+
+        if (window.innerWidth < 600) {
+          message.style.width = "100%";
+        } else {
+          message.style.width = `${width.value}px`;
+        }
+        // message.style.width = `${width.value}px`;
         message.style.fontSize = `${fontSize.value}px`;
         messageDemo.appendChild(message);
       };
