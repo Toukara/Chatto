@@ -1,11 +1,13 @@
 ﻿<!-- Project name with favicon -->
-<p align="center" style="text-align:center;">
+<p align="center">
  <img src="./assets/favicon/name.svg" />
 </p>
 
-<p style="text-align:center;">
+<p align="center"">
 Chatto is an project hosted on GitHub that provides a customizable overlay system for streaming platforms (Kick.com for the moment). It allows streamers to enhance their live streams by displaying various types of overlays as chat boxes.
 </p>
+
+---
 
 ## Features
 
