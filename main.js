@@ -1,5 +1,4 @@
 const urlParams = new URLSearchParams(window.location.search);
-<<<<<<< HEAD
 // http://127.0.0.1:5500/chat.html?channel=toukara&width=525&fontSize=12&color=#ffffff&badges=true&font=Noto Sans
 
 const params = {
@@ -10,11 +9,6 @@ const params = {
   showBadges: urlParams.get("badges"),
   fontFamily: urlParams.get("font"),
 };
-=======
-// http://127.0.0.1:5501/chat.html?channel=toukaratest&width=200
-const channelName = urlParams.get("channel");
-const width = urlParams.get("width");
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
 
 const deleteMessageTimer = 300000; // 5 minutes per default
 
@@ -102,36 +96,23 @@ async function handleMessages(msg) {
   messageContent.setAttribute("message-id", msg.id);
   messageContent.setAttribute("timestamp", msg.created_at);
 
-<<<<<<< HEAD
   messageContent.style.color = params.color ? params.color : "#ffffff";
 
   if (user.badges.length > 0 && params.showBadges == "true") {
-=======
-  if (user.badges.length > 0) {
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
     userBadges.innerHTML = await getBadges(user.badges);
   } else {
     userBadges.innerHTML = "";
   }
 
-<<<<<<< HEAD
   params.width ? (messageElement.style.width = params.width + "px") : (messageElement.style.width = "525px");
-=======
-  if (width) {
-    messageElement.style.width = width + "px";
-  }
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
 
   username.prepend(userBadges);
   messageElement.appendChild(username);
   messageElement.appendChild(messageContent);
 
-<<<<<<< HEAD
   params.fontFamily ? (messageElement.style.fontFamily = params.fontFamily) : (messageElement.style.fontFamily = "Noto Sans");
   params.fontSize ? (messageElement.style.fontSize = params.fontSize + "px") : (messageElement.style.fontSize = "12px");
 
-=======
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
   document.getElementById("chat-container").appendChild(messageElement);
 }
 
@@ -172,20 +153,7 @@ async function getBadges(userBadges) {
 
   for (let i = 0; i < userBadges.length; i++) {
     if (userBadges[i].type == "subscriber") {
-<<<<<<< HEAD
       return (badgesArray += ``);
-=======
-      let subAge = userBadges[i].count;
-      subsBadges.sort((a, b) => b.months - a.months);
-      for (let j = 0; j < subsBadges.length; j++) {
-        if (subAge >= subsBadges[j].months) {
-          badgesArray += `<img src="${subsBadges[j].badge_image.src}" class="badge ${subsBadges[j].text}"></img>`;
-          break;
-        }
-      }
-
-      continue;
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
     }
     badgesArray += `<img src="./assets/svg/${userBadges[i].type}.svg" class="badge"></img>`;
   }
@@ -194,11 +162,7 @@ async function getBadges(userBadges) {
 }
 
 async function main() {
-<<<<<<< HEAD
   const channelId = await getChannelInfo(params.channel);
-=======
-  const channelId = await getChannelInfo(channelName);
->>>>>>> e456a7a9dbfabf5b32369ecc8bde88c548b35a65
 
   const chat = new WebSocket(url);
   console.log("Connecting to Pusher...");
